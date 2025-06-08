@@ -16,6 +16,13 @@ export default function Home() {
     window.open(finalUrl, "_blank");
   };
 
+  
+  const handleKeyDown = (e:any) => {
+    if (e.key === "Enter") {
+      handleSend();
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gray-800">
       <div className="w-full max-w-3xl flex flex-col items-center justify-center flex-1">
@@ -27,6 +34,7 @@ export default function Home() {
         <div className="w-full relative">
           <input
             value={userLink}
+            onKeyDown={handleKeyDown}
             onChange={(e) => setUserLink(e.target.value)}
             type="text"
             placeholder="Enter your link here..."
