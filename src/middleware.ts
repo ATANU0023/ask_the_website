@@ -1,12 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
 
-export function middleware(req: NextRequest){
-    const res = NextResponse.next()
+export default auth((req) => {
+  const { pathname } = req.nextUrl;
+  const isAuth = !!req.auth;
 
-    const cookie = req.cookies.get("sessionId")
+  const publicPaths = ["/login", "/register", "/api/auth"];
+  const isPublic = publicPaths.some(p => pathname.startsWith(p));
 
-    if(!cookie){
-        res.cookies.set("sessionId",crypto.randomUUID())
-    }
-    return res
-}
+  if (!isAuth && !isPublic) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  return NextResponse.next();
+});
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+};
