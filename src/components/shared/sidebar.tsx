@@ -42,21 +42,24 @@ export function Sidebar({ workspaces, user: propUser }: SidebarProps) {
   const isInWorkspace = pathname.startsWith("/workspace/")
 
   return (
-    <aside className="flex flex-col h-screen w-[280px] shrink-0 bg-surface-container-lowest border-r border-border">
+    <aside className="w-[280px] h-screen shrink-0 bg-surface-container-lowest border-r border-outline-muted flex flex-col py-gutter z-50">
       {/* Brand */}
-      <div className="flex h-16 items-center gap-3 px-6 shrink-0">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-primary/5">
-          <span className="material-icon text-primary">neurology</span>
-        </div>
-        <span className="font-geist text-lg font-semibold text-foreground tracking-tight">
-          CognitiveSync
-        </span>
+      <div className="px-6 mb-8 shrink-0">
+        <h1 className="font-headline-lg text-headline-lg font-bold text-primary">CognitiveSync</h1>
+        <p className="font-label-md text-label-md text-on-surface-variant opacity-70">Technical Zen Workspace</p>
       </div>
 
-      <div className="mx-6 h-px bg-border" />
+      <div className="px-6 shrink-0 mb-8">
+        <Link href="/workspace/new">
+          <button className="w-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container font-label-md text-label-md py-3 rounded-xl hover:opacity-90 transition-all active:scale-95 shadow-lg">
+            <span className="material-icon">add</span>
+            New Notebook
+          </button>
+        </Link>
+      </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-0.5 px-3 py-4 overflow-y-auto">
+      <nav className="flex-1 space-y-1 overflow-y-auto">
         {/* Home */}
         <Link
           href="/dashboard"
@@ -187,39 +190,30 @@ export function Sidebar({ workspaces, user: propUser }: SidebarProps) {
         </Link>
       </nav>
 
-      {/* New Notebook Button */}
-      <div className="px-4 pb-2 shrink-0">
-        <Link href="/workspace/new">
-          <button className="flex w-full items-center justify-center gap-2 rounded-lg border border-outline-muted/20 px-4 py-2.5 text-sm text-on-surface-variant hover:text-foreground hover:bg-surface-container transition-all duration-200">
-            <span className="material-icon text-[18px]">note_add</span>
-            <span>New Notebook</span>
-          </button>
-        </Link>
-      </div>
-
       {/* User Profile */}
-      <div className="mx-4 my-2 h-px bg-border" />
-      <div className="flex items-center gap-3 px-6 py-3 shrink-0">
-        <Avatar className="h-8 w-8 rounded-lg">
-          <AvatarImage src={currentUser.image || ""} alt={currentUser.name || "User"} />
-          <AvatarFallback className="rounded-lg bg-primary/10 text-primary text-xs font-medium">
-            {initials}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">
-            {currentUser.name || "User"}
-          </p>
-          <p className="text-xs text-on-surface-variant truncate">
-            {currentUser.email || ""}
-          </p>
+      <div className="mt-auto px-6 pt-6 border-t border-outline-muted/30 shrink-0">
+        <div className="flex items-center gap-3">
+          <Avatar className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-muted overflow-hidden">
+            <AvatarImage className="w-full h-full object-cover" src={currentUser.image || ""} alt={currentUser.name || "User"} />
+            <AvatarFallback className="text-primary text-xs font-bold">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col flex-1 min-w-0">
+            <span className="font-label-md text-label-md text-on-surface truncate">
+              {currentUser.name || "User"}
+            </span>
+            <span className="text-[11px] text-on-surface-variant truncate">
+              {currentUser.email || "Pro Account"}
+            </span>
+          </div>
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="flex items-center justify-center text-on-surface-variant hover:text-error transition-colors shrink-0"
+          >
+            <span className="material-icon text-[18px]">logout</span>
+          </button>
         </div>
-        <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex h-7 w-7 items-center justify-center rounded text-on-surface-variant hover:text-foreground hover:bg-surface-container transition-colors shrink-0"
-        >
-          <span className="material-icon text-[18px]">logout</span>
-        </button>
       </div>
     </aside>
   )

@@ -1,52 +1,46 @@
-import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
+import type { LLMProvider, ProviderType } from "./types";
+import { GeminiProvider } from "./providers/gemini";
+import { GroqProvider } from "./providers/groq";
+
+const PROVIDER_MAP: Record<ProviderType, () => LLMProvider> = {
+  gemini: () => new GeminiProvider(),
+  groq: () => new GroqProvider(),
+};
+
+function getDefaultProvider(): ProviderType {
+  const env = process.env.LLM_PROVIDER;
+  if (env === "groq" || env === "gemini") return env;
+  return "gemini";
+}
 
 class LLMService {
-  private genAI: GoogleGenerativeAI;
-  private model: GenerativeModel;
-  private modelName: string = "gemini-2.5-flash";
+  private defaultType: ProviderType;
+  private cache = new Map<ProviderType, LLMProvider>();
 
   constructor() {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error("GEMINI_API_KEY environment variable is required");
-    this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: this.modelName });
+    this.defaultType = getDefaultProvider();
   }
 
-  async generate(prompt: string, systemPrompt?: string): Promise<string> {
-    const result = await this.model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      systemInstruction: systemPrompt
-        ? { role: "user", parts: [{ text: systemPrompt }] }
-        : undefined,
-    });
-
-    const response = result.response;
-    return response.text();
+  private getProvider(type?: ProviderType): LLMProvider {
+    const resolved = type || this.defaultType;
+    let provider = this.cache.get(resolved);
+    if (!provider) {
+      const factory = PROVIDER_MAP[resolved];
+      if (!factory) throw new Error(`Unknown LLM provider: ${resolved}`);
+      provider = factory();
+      this.cache.set(resolved, provider);
+    }
+    return provider;
   }
 
-  async generateStream(
-    prompt: string,
-    systemPrompt?: string
-  ): Promise<ReadableStream<string>> {
-    const result = await this.model.generateContentStream({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      systemInstruction: systemPrompt
-        ? { role: "user", parts: [{ text: systemPrompt }] }
-        : undefined,
-    });
+  async generate(prompt: string, systemPrompt?: string, provider?: ProviderType): Promise<string> {
+    return this.getProvider(provider).generate(prompt, systemPrompt);
+  }
 
-    const stream = new ReadableStream<string>({
-      async start(controller) {
-        for await (const chunk of result.stream) {
-          const text = chunk.text();
-          if (text) controller.enqueue(text);
-        }
-        controller.close();
-      },
-    });
-
-    return stream;
+  async generateStream(prompt: string, systemPrompt?: string, provider?: ProviderType): Promise<ReadableStream<string>> {
+    return this.getProvider(provider).generateStream(prompt, systemPrompt);
   }
 }
 
 export const llm = new LLMService();
+export type { ProviderType } from "./types";

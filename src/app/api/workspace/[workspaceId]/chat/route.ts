@@ -35,7 +35,7 @@ export async function POST(
       );
     }
 
-    const { sessionId, message } = parsed.data;
+    const { sessionId, message, provider } = parsed.data;
 
     const chatSession = await getSession(sessionId);
     if (!chatSession || chatSession.workspaceId !== workspaceId) {
@@ -56,7 +56,8 @@ export async function POST(
     const { stream, citations } = await runRAGStream(
       workspaceId,
       message,
-      history
+      history,
+      provider
     );
 
     const encoder = new TextEncoder();

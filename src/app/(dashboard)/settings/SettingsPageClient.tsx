@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,8 +8,9 @@ import { Switch } from "@/components/ui/switch"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useTheme } from "next-themes"
-import { Sun, Moon, Trash2, User } from "lucide-react"
+import { Sun, Moon, Trash2, User, Sparkles } from "lucide-react"
 
 interface SettingsPageClientProps {
   user: {
@@ -23,6 +24,17 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
   const { theme, setTheme } = useTheme()
   const [name, setName] = useState(user.name || "")
   const [saving, setSaving] = useState(false)
+  const [provider, setProvider] = useState("gemini")
+
+  useEffect(() => {
+    const saved = localStorage.getItem("llmProvider")
+    if (saved === "gemini" || saved === "groq") setProvider(saved)
+  }, [])
+
+  function handleProviderChange(value: string) {
+    setProvider(value)
+    localStorage.setItem("llmProvider", value)
+  }
 
   const initials = user.name
     ? user.name
@@ -118,6 +130,37 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
               checked={theme === "dark"}
               onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5" />
+            AI Model
+          </CardTitle>
+          <CardDescription>
+            Choose which LLM provider to use for chat, flashcards, quizzes, and reports
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Label htmlFor="llm-provider">Provider</Label>
+            <Select value={provider} onValueChange={handleProviderChange}>
+              <SelectTrigger id="llm-provider" className="w-full">
+                <SelectValue placeholder="Select provider" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gemini">Gemini 2.5 Flash</SelectItem>
+                <SelectItem value="groq">Groq (Llama 3.3 70B)</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">
+              {provider === "gemini"
+                ? "Uses GEMINI_API_KEY from your environment. Free tier available."
+                : "Uses GROQ_API_KEY from your environment. Fast inference with free tier."}
+            </p>
           </div>
         </CardContent>
       </Card>

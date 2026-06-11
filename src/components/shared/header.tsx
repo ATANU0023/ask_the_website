@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -9,11 +9,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Menu } from "lucide-react"
+import { TabNavigation } from "@/components/shared/TabNavigation"
 
 interface SearchResult {
   documents: Array<{ id: string; title: string; sourceType: string; url?: string }>
   chunks: Array<{ id: string; content: string; documentId: string }>
   messages: Array<{ id: string; content: string; role: string; sessionId: string }>
+}
+
+interface Workspace {
+  id: string
+  name: string
 }
 
 interface HeaderProps {
@@ -22,11 +28,16 @@ interface HeaderProps {
     email?: string | null
     image?: string | null
   }
+  workspaces?: Workspace[]
   onMenuClick: () => void
 }
 
-export function Header({ user, onMenuClick }: HeaderProps) {
+export function Header({ user, workspaces = [], onMenuClick }: HeaderProps) {
   const router = useRouter()
+  const params = useParams()
+  const workspaceId = params?.workspaceId as string | undefined
+  const activeWorkspace = workspaces.find((w) => w.id === workspaceId)
+
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [results, setResults] = useState<SearchResult | null>(null)
@@ -62,22 +73,39 @@ export function Header({ user, onMenuClick }: HeaderProps) {
   }, [searchQuery])
 
   return (
-    <header className="glass-header flex h-16 items-center gap-4 px-6 shrink-0">
-      <Button variant="ghost" size="icon" className="lg:hidden text-on-surface-variant hover:text-foreground" onClick={onMenuClick}>
-        <Menu className="h-5 w-5" />
-      </Button>
+    <header className="flex h-16 items-center justify-between gap-4 px-margin-desktop shrink-0 backdrop-blur-xl bg-surface-glass/60 border-b border-outline-muted z-50">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" className="lg:hidden text-on-surface-variant hover:text-foreground" onClick={onMenuClick}>
+          <Menu className="h-5 w-5" />
+        </Button>
+        {activeWorkspace && (
+          <div className="hidden md:flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="material-icon text-primary">description</span>
+              <span className="font-headline-lg text-[18px] font-bold text-on-surface whitespace-nowrap">
+                {activeWorkspace.name}
+              </span>
+            </div>
+            <TabNavigation workspaceId={activeWorkspace.id} />
+          </div>
+        )}
+      </div>
 
       {/* Search */}
       <div className="flex-1 max-w-md">
         <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
           <DialogTrigger asChild>
-            <div className="input-glass flex items-center gap-2 px-3 py-2 cursor-pointer">
-              <span className="material-icon text-on-surface-variant text-[18px]">search</span>
-              <span className="text-sm text-on-surface-variant/60">Search documents, chats...</span>
+            <div className="relative group cursor-pointer w-64 hidden md:block">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <span className="material-icon text-on-surface-variant text-[20px]">search</span>
+              </div>
+              <div className="bg-surface-container-low border border-outline-muted rounded-full py-1.5 pl-10 pr-4 text-sm text-on-surface-variant/60 w-full text-left transition-all group-hover:border-primary/50">
+                Search insights...
+              </div>
             </div>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-hidden flex flex-col bg-surface-container border border-outline-muted/20">
-            <div className="input-glass flex items-center gap-3 px-4 py-3">
+            <div className="input-glass flex items-center gap-3 px-4 py-3 rounded-full">
               <span className="material-icon text-on-surface-variant">search</span>
               <input
                 ref={searchInputRef}

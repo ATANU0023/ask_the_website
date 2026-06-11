@@ -54,7 +54,7 @@ export function DashboardShell({
       </Sheet>
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <Header user={user} onMenuClick={() => setMobileSidebarOpen(true)} />
+        <Header user={user} workspaces={workspaces} onMenuClick={() => setMobileSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto p-6 lg:p-8">
           <div className="mx-auto max-w-[1440px]">
             {children}

@@ -118,9 +118,9 @@ export function ChatPageClient({
   }
 
   return (
-    <div className="flex h-full rounded-xl overflow-hidden glass-card-strong">
+    <div className="flex h-full">
       {/* Chat History Sidebar */}
-      <div className="w-64 shrink-0 border-r border-border">
+      <div className="w-64 shrink-0 border-r border-outline-muted bg-surface-container-lowest flex flex-col">
         <ChatHistory
           sessions={sessions}
           activeSessionId={activeSessionId}
@@ -135,7 +135,7 @@ export function ChatPageClient({
       </div>
 
       {/* Main Chat */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full bg-background relative">
         {activeSessionId ? (
           <ChatWindow
             sessionId={activeSessionId}
@@ -157,10 +157,13 @@ export function ChatPageClient({
 
       {/* Sources Sidebar */}
       {activeSessionId && showSources && (
-        <div className="w-72 shrink-0 border-l border-border overflow-y-auto">
-          <div className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-foreground">Sources</h3>
+        <aside className="w-80 h-full border-l border-outline-muted bg-surface-container-lowest flex flex-col p-gutter overflow-y-auto custom-scrollbar">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-label-md text-label-md font-bold text-on-surface uppercase tracking-wider">Sources</h2>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-bold">
+                {allCitations.length} CITED
+              </span>
               <button
                 onClick={() => setShowSources(false)}
                 className="flex h-6 w-6 items-center justify-center rounded text-on-surface-variant hover:text-foreground hover:bg-surface-container transition-colors"
@@ -168,35 +171,33 @@ export function ChatPageClient({
                 <span className="material-icon text-[16px]">close</span>
               </button>
             </div>
-            {allCitations.length === 0 ? (
-              <p className="text-xs text-on-surface-variant/60">
-                Sources will appear here when the AI references documents
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {allCitations.map((citation: any, i: number) => (
-                  <div key={i} className="glass-card p-3">
-                    <div className="flex items-start gap-2">
-                      <span className="material-icon text-[16px] text-primary shrink-0 mt-0.5">description</span>
-                      <div className="min-w-0">
-                        <p className="text-xs font-medium text-foreground truncate">
-                          {citation.sourceTitle || "Document"}
-                        </p>
-                        <p className="text-xs text-on-surface-variant mt-0.5">
-                          {citation.sourceType}
-                          {citation.pageNumber ? ` · p.${citation.pageNumber}` : ""}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-xs text-on-surface-variant/70 mt-2 line-clamp-3">
-                      {citation.textSnippet}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
-        </div>
+          {allCitations.length === 0 ? (
+            <p className="text-xs text-on-surface-variant/60 italic">
+              Sources will appear here when the AI references documents
+            </p>
+          ) : (
+            <div className="space-y-6">
+              {allCitations.map((citation: any, i: number) => (
+                <div key={i} className="glass-card rounded-xl p-4 transition-all cursor-pointer group">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-5 h-5 flex items-center justify-center bg-primary text-on-primary rounded text-[10px] font-bold">{i + 1}</span>
+                    <span className="text-xs font-medium text-on-surface-variant truncate">
+                      {citation.sourceTitle || "Document"}
+                    </span>
+                  </div>
+                  <p className="text-[13px] leading-relaxed text-on-surface-variant line-clamp-4 italic group-hover:text-on-surface transition-colors">
+                    "{citation.textSnippet}"
+                  </p>
+                  <div className="mt-3 flex items-center gap-1 text-primary text-[11px] font-semibold uppercase tracking-tight opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span>Open Document</span>
+                    <span className="material-symbols-outlined text-[14px]">arrow_outward</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </aside>
       )}
     </div>
   )

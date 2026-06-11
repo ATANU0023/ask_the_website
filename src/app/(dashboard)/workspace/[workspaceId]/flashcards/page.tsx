@@ -36,16 +36,7 @@ export default async function FlashcardsPage({ params }: PageProps) {
 
   return (
     <div className="space-y-6 h-full flex flex-col">
-      {/* Workspace Header */}
-      <div className="glass-card-strong px-6 py-4 shrink-0">
-        <div className="flex items-center justify-between mb-1">
-          <h1 className="text-lg font-semibold text-foreground">{workspace.name}</h1>
-        </div>
-        {workspace.description && (
-          <p className="text-sm text-on-surface-variant mb-4">{workspace.description}</p>
-        )}
-        <TabNavigation workspaceId={params.workspaceId} />
-      </div>
+
 
       <div className="flex items-center justify-between shrink-0">
         <div>

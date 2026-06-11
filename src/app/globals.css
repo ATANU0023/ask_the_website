@@ -71,17 +71,18 @@
     background: rgba(30, 31, 38, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(139, 139, 152, 0.15);
+    border: 1px solid rgba(70, 69, 84, 0.4);
     @apply rounded-xl transition-all duration-300;
   }
   .glass-card:hover {
-    border-color: rgba(192, 193, 255, 0.3);
+    border-color: rgba(192, 193, 255, 0.5);
+    transform: translateY(-4px);
   }
   .glass-card-strong {
     background: rgba(30, 31, 38, 0.85);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(139, 139, 152, 0.2);
+    border: 1px solid rgba(70, 69, 84, 0.4);
     @apply rounded-xl transition-all duration-300;
   }
   .glass-header {
@@ -126,27 +127,27 @@
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+::-webkit-scrollbar, .custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
 }
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track, .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(139, 139, 152, 0.2);
-  border-radius: 3px;
+::-webkit-scrollbar-thumb, .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(70, 69, 84, 0.6);
+  border-radius: 10px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 139, 152, 0.4);
+::-webkit-scrollbar-thumb:hover, .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(70, 69, 84, 0.8);
 }
 
 /* Material Symbols icon helper */
-.material-icon {
+.material-icon, .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1;
   letter-spacing: normal;
   text-transform: none;
@@ -154,5 +155,5 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }

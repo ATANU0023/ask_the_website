@@ -3,6 +3,7 @@ import { z } from "zod";
 export const chatMessageSchema = z.object({
   sessionId: z.string().uuid(),
   message: z.string().min(1).max(10000),
+  provider: z.enum(["gemini", "groq"]).optional(),
 });
 
 export const createSessionSchema = z.object({

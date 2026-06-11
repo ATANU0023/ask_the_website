@@ -28,19 +28,10 @@ export default async function ChatPage({ params, searchParams }: PageProps) {
   }
 
   return (
-    <div className="space-y-4 h-full flex flex-col">
-      {/* Workspace Header */}
-      <div className="glass-card-strong px-6 py-4 shrink-0">
-        <div className="flex items-center justify-between mb-1">
-          <h1 className="text-lg font-semibold text-foreground">{workspace.name}</h1>
-        </div>
-        {workspace.description && (
-          <p className="text-sm text-on-surface-variant mb-4">{workspace.description}</p>
-        )}
-        <TabNavigation workspaceId={params.workspaceId} />
-      </div>
+    <div className="h-[calc(100vh-112px)] lg:h-[calc(100vh-128px)] flex flex-col glass-card-strong rounded-xl overflow-hidden border border-border/50">
 
-      <div className="flex-1 min-h-0">
+
+      <div className="flex-1 min-h-0 bg-background/20 relative">
         <ChatPageClient
           workspaceId={params.workspaceId}
           userId={session.user.id}

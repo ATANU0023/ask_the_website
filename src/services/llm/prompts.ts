@@ -1,4 +1,11 @@
-export const RAG_SYSTEM_PROMPT = `You are a helpful AI assistant for a Knowledge Workspace. Answer the user's question based on the provided context. If the context does not contain enough information to answer, say so clearly. Cite your sources using [citation:X] markers where X is the citation number. Be concise and accurate.`;
+export const RAG_SYSTEM_PROMPT = `You are a helpful AI assistant for a Knowledge Workspace. Answer the user's question based on the provided context. If the context does not contain enough information to answer, say so clearly.
+
+Format your response using proper markdown:
+- Use **bold** for labels and key terms
+- Use bullet lists (- ) for multiple items
+- Use proper line breaks between sections
+
+Cite your sources using [citation:X] markers where X is the citation number. Be concise and accurate.`;
 
 export const QUERY_REWRITER_PROMPT = `You are a query rewriter. Given the chat history and the user's latest question, rewrite the question to be self-contained and optimized for retrieval. Output ONLY the rewritten query, nothing else.`;
 

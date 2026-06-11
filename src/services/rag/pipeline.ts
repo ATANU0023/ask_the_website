@@ -20,9 +20,10 @@ interface RAGResult {
 export async function runRAG(
   workspaceId: string,
   question: string,
-  chatHistory?: { role: "user" | "assistant"; content: string }[]
+  chatHistory?: { role: "user" | "assistant"; content: string }[],
+  provider?: "gemini" | "groq"
 ): Promise<RAGResult> {
-  const rewrittenQuery = await rewriteQuery(question, chatHistory);
+  const rewrittenQuery = await rewriteQuery(question, chatHistory, provider);
 
   const queryEmbedding = await embeddingsProvider.generate(rewrittenQuery);
 
@@ -82,7 +83,7 @@ export async function runRAG(
     ? `Chat history:\n${chatHistoryText}\n\nContext:\n${context}\n\nQuestion: ${rewrittenQuery}`
     : `Context:\n${context}\n\nQuestion: ${rewrittenQuery}`;
 
-  const answer = await llm.generate(prompt, RAG_SYSTEM_PROMPT);
+  const answer = await llm.generate(prompt, RAG_SYSTEM_PROMPT, provider);
 
   return { answer, citations };
 }
@@ -90,9 +91,10 @@ export async function runRAG(
 export async function runRAGStream(
   workspaceId: string,
   question: string,
-  chatHistory?: { role: "user" | "assistant"; content: string }[]
+  chatHistory?: { role: "user" | "assistant"; content: string }[],
+  provider?: "gemini" | "groq"
 ): Promise<{ stream: ReadableStream<string>; citations: Citation[] }> {
-  const rewrittenQuery = await rewriteQuery(question, chatHistory);
+  const rewrittenQuery = await rewriteQuery(question, chatHistory, provider);
 
   const queryEmbedding = await embeddingsProvider.generate(rewrittenQuery);
 
@@ -152,14 +154,15 @@ export async function runRAGStream(
     ? `Chat history:\n${chatHistoryText}\n\nContext:\n${context}\n\nQuestion: ${rewrittenQuery}`
     : `Context:\n${context}\n\nQuestion: ${rewrittenQuery}`;
 
-  const stream = await llm.generateStream(prompt, RAG_SYSTEM_PROMPT);
+  const stream = await llm.generateStream(prompt, RAG_SYSTEM_PROMPT, provider);
 
   return { stream, citations };
 }
 
 async function rewriteQuery(
   question: string,
-  chatHistory?: { role: "user" | "assistant"; content: string }[]
+  chatHistory?: { role: "user" | "assistant"; content: string }[],
+  provider?: "gemini" | "groq"
 ): Promise<string> {
   if (!chatHistory || chatHistory.length === 0) return question;
 
@@ -170,7 +173,7 @@ async function rewriteQuery(
   const prompt = `Chat history:\n${historyText}\n\nLatest question: ${question}\n\nRewritten query:`;
 
   try {
-    const rewritten = await llm.generate(prompt, QUERY_REWRITER_PROMPT);
+    const rewritten = await llm.generate(prompt, QUERY_REWRITER_PROMPT, provider);
     return rewritten.trim() || question;
   } catch {
     return question;
