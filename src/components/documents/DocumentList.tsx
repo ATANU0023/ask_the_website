@@ -4,6 +4,7 @@ import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { toast } from "@/components/ui/toast"
+import { IngestWebsiteDialog } from "@/components/documents/IngestWebsiteDialog"
 
 interface Document {
   id: string
@@ -152,6 +153,7 @@ export function DocumentList({ documents, workspaceId }: DocumentListProps) {
             if (file) handleUpload(file)
           }}
         />
+        <IngestWebsiteDialog workspaceId={workspaceId} />
       </div>
 
       {/* Upload Dropzone */}

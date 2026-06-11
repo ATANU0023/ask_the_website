@@ -256,7 +256,10 @@ export default async function DashboardPage() {
                   <p className="text-xs text-on-surface-variant mt-1">Create a workspace for your documents</p>
                 </div>
               </Link>
-              <div className="group relative overflow-hidden rounded-xl bg-surface-container/50 border border-border/50 p-5 hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+              <Link
+                href={workspaces.length > 0 ? `/workspace/${workspaces[0].id}` : "/workspace/new"}
+                className="group relative overflow-hidden rounded-xl bg-surface-container/50 border border-border/50 p-5 hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer block"
+              >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-amber-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
                   <span className="material-icon text-[24px] text-amber-400 mb-3 block group-hover:scale-110 transition-transform">
@@ -265,8 +268,11 @@ export default async function DashboardPage() {
                   <p className="text-sm font-medium text-foreground">Upload Files</p>
                   <p className="text-xs text-on-surface-variant mt-1">Add PDFs, documents to your notebook</p>
                 </div>
-              </div>
-              <div className="group relative overflow-hidden rounded-xl bg-surface-container/50 border border-border/50 p-5 hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+              </Link>
+              <Link
+                href={workspaces.length > 0 ? `/workspace/${workspaces[0].id}` : "/workspace/new"}
+                className="group relative overflow-hidden rounded-xl bg-surface-container/50 border border-border/50 p-5 hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer block"
+              >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-green-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
                   <span className="material-icon text-[24px] text-green-400 mb-3 block group-hover:scale-110 transition-transform">
@@ -275,8 +281,11 @@ export default async function DashboardPage() {
                   <p className="text-sm font-medium text-foreground">Ingest Website</p>
                   <p className="text-xs text-on-surface-variant mt-1">Import content from any URL</p>
                 </div>
-              </div>
-              <div className="group relative overflow-hidden rounded-xl bg-surface-container/50 border border-border/50 p-5 hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+              </Link>
+              <Link
+                href={workspaces.length > 0 ? `/workspace/${workspaces[0].id}/quizzes` : "/workspace/new"}
+                className="group relative overflow-hidden rounded-xl bg-surface-container/50 border border-border/50 p-5 hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer block"
+              >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
                   <span className="material-icon text-[24px] text-purple-400 mb-3 block group-hover:scale-110 transition-transform">
@@ -285,7 +294,7 @@ export default async function DashboardPage() {
                   <p className="text-sm font-medium text-foreground">Generate Quiz</p>
                   <p className="text-xs text-on-surface-variant mt-1">Test knowledge with AI quizzes</p>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
