@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { getWorkspace } from "@/services/workspaces";
 import { getDocument } from "@/services/documents";
 import { reprocessDocument } from "@/services/ingestion";
+export const runtime = "nodejs";
 
 export async function POST(
   _req: NextRequest,

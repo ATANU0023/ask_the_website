@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { createWorkspaceSchema } from "@/lib/validations/workspace";
 import { listWorkspaces, createWorkspace } from "@/services/workspaces";
+export const runtime = "nodejs";
 
 export async function GET() {
   try {

@@ -5,6 +5,7 @@ import { flashcards } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { getWorkspace } from "@/services/workspaces";
 import { deleteFlashcard } from "@/services/flashcards";
+export const runtime = "nodejs";
 
 export async function DELETE(
   _req: NextRequest,

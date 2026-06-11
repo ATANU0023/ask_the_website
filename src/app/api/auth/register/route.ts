@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { registerSchema } from "@/lib/validations/auth";
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {

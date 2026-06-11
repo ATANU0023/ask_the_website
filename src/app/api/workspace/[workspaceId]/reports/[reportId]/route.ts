@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { getWorkspace } from "@/services/workspaces";
 import { getReport, deleteReport } from "@/services/reports";
+export const runtime = "nodejs";
 
 export async function GET(
   _req: NextRequest,

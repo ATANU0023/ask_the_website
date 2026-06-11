@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { ingestUrlSchema } from "@/lib/validations/document";
 import { getWorkspace } from "@/services/workspaces";
 import { ingestWebsite } from "@/services/ingestion/website";
+export const runtime = "nodejs";
 
 export async function POST(
   req: NextRequest,

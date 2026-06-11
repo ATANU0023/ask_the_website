@@ -4,6 +4,7 @@ import { chatMessageSchema } from "@/lib/validations/chat";
 import { getWorkspace } from "@/services/workspaces";
 import { runRAGStream } from "@/services/rag/pipeline";
 import { getSessionMessages, addMessage, getSession } from "@/services/chat";
+export const runtime = "nodejs";
 
 export async function POST(
   req: NextRequest,

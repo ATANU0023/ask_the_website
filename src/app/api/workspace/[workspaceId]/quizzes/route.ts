@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { generateQuizSchema } from "@/lib/validations/quiz";
 import { getWorkspace } from "@/services/workspaces";
 import { listQuizzes, generateQuiz } from "@/services/quizzes";
+export const runtime = "nodejs";
 
 export async function GET(
   _req: NextRequest,

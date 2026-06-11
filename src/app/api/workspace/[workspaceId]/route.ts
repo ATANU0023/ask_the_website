@@ -9,6 +9,7 @@ import {
   updateWorkspace,
   deleteWorkspace,
 } from "@/services/workspaces";
+export const runtime = "nodejs";
 
 export async function GET(
   _req: NextRequest,

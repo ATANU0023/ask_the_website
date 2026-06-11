@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { generateFlashcardsSchema } from "@/lib/validations/flashcard";
 import { getWorkspace } from "@/services/workspaces";
 import { listFlashcards, generateFlashcards } from "@/services/flashcards";
+export const runtime = "nodejs";
 
 export async function GET(
   _req: NextRequest,

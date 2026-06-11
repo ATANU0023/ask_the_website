@@ -3,6 +3,8 @@ import { auth } from "@/auth";
 import { searchQuerySchema } from "@/lib/validations/search";
 import { globalSearch } from "@/services/search";
 import { getWorkspacesForUser } from "@/services/workspaces";
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {

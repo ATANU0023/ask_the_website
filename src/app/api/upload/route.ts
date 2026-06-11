@@ -5,6 +5,7 @@ import { uploadFile } from "@/services/documents/storage";
 import { ingestPDF } from "@/services/ingestion/pdf";
 import { ingestDOCX } from "@/services/ingestion/docx";
 import { ingestPPTX } from "@/services/ingestion/pptx";
+export const runtime = "nodejs";
 
 const ALLOWED_TYPES = [
   "application/pdf",

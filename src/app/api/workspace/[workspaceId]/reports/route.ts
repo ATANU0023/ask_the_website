@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { generateReportSchema } from "@/lib/validations/report";
 import { getWorkspace } from "@/services/workspaces";
 import { listReports, generateReport } from "@/services/reports";
+export const runtime = "nodejs";
 
 export async function GET(
   _req: NextRequest,

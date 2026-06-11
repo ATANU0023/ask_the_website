@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { createSessionSchema } from "@/lib/validations/chat";
 import { getWorkspace } from "@/services/workspaces";
 import { listSessions, createSession } from "@/services/chat";
+export const runtime = "nodejs";
 
 export async function GET(
   _req: NextRequest,

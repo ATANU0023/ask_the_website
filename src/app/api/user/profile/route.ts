@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+export const runtime = "nodejs";
 
 const updateProfileSchema = z.object({
   name: z.string().min(1).max(100).optional(),
