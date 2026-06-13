@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { chatMessageSchema } from "@/lib/validations/chat";
 import { getWorkspace } from "@/services/workspaces";
 import { runRAGStream } from "@/services/rag/pipeline";
-import { getSessionMessages, addMessage, getSession } from "@/services/chat";
+import { getSessionMessages, addMessage, getSession, generateAndUpdateTitle } from "@/services/chat";
 export const runtime = "nodejs";
 
 export async function POST(
@@ -83,10 +83,19 @@ export async function POST(
             controller.enqueue(encoder.encode(event));
           }
 
+          await addMessage(sessionId, "assistant", fullResponse, citations);
+
+          if (chatSession.title === "New Chat" || !chatSession.title) {
+            const firstMessage = history.length > 0 ? history[0].content : message;
+            const newTitle = await generateAndUpdateTitle(sessionId, firstMessage);
+            if (newTitle) {
+              const event = `event: title_update\ndata: ${JSON.stringify(newTitle)}\n\n`;
+              controller.enqueue(encoder.encode(event));
+            }
+          }
+
           controller.enqueue(encoder.encode("event: done\ndata: [DONE]\n\n"));
           controller.close();
-
-          await addMessage(sessionId, "assistant", fullResponse, citations);
         } catch (error) {
           controller.enqueue(
             encoder.encode(

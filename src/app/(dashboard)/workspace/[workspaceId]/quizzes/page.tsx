@@ -10,9 +10,9 @@ import { quizzes, quizQuestions } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     workspaceId: string;
-  };
+  }>;
 }
 
 export default async function QuizzesPage({ params }: PageProps) {
@@ -22,7 +22,9 @@ export default async function QuizzesPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  const workspace = await getWorkspace(params.workspaceId);
+  const { workspaceId } = await params;
+
+  const workspace = await getWorkspace(workspaceId);
 
   if (!workspace) {
     notFound();
@@ -31,7 +33,7 @@ export default async function QuizzesPage({ params }: PageProps) {
   const quizRecords = await db
     .select()
     .from(quizzes)
-    .where(eq(quizzes.workspaceId, params.workspaceId))
+    .where(eq(quizzes.workspaceId, workspaceId))
     .orderBy(quizzes.createdAt);
 
   const quizData = await Promise.all(
@@ -67,11 +69,11 @@ export default async function QuizzesPage({ params }: PageProps) {
           <h2 className="text-lg font-medium text-foreground">Quizzes</h2>
           <p className="text-sm text-on-surface-variant">Test your knowledge with AI-generated quizzes</p>
         </div>
-        <GenerateQuizDialog workspaceId={params.workspaceId} />
+        <GenerateQuizDialog workspaceId={workspaceId} />
       </div>
 
       <div className="flex-1 min-h-0">
-        <QuizList quizzes={quizData} workspaceId={params.workspaceId} />
+        <QuizList quizzes={quizData} workspaceId={workspaceId} />
       </div>
     </div>
   );

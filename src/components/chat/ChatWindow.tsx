@@ -30,6 +30,7 @@ interface ChatWindowProps {
   initialMessages?: Message[]
   citations?: Citation[]
   onToggleSources?: () => void
+  onTitleUpdate?: (title: string) => void
 }
 
 export function ChatWindow({
@@ -37,6 +38,7 @@ export function ChatWindow({
   workspaceId,
   initialMessages = [],
   onToggleSources,
+  onTitleUpdate,
 }: ChatWindowProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [input, setInput] = useState("")
@@ -127,6 +129,11 @@ export function ChatWindow({
 
             try {
               const parsed = JSON.parse(data)
+              if (eventType === "title_update") {
+                onTitleUpdate?.(parsed as string)
+                eventType = ""
+                continue
+              }
               if (eventType === "citation") {
                 const citation = parsed as Citation
                 setMessages((prev) =>
@@ -266,7 +273,7 @@ export function ChatWindow({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-transparent border-none focus:ring-0 text-on-surface font-body-md py-3 resize-none custom-scrollbar max-h-32 placeholder:text-outline"
+              className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none outline-none text-on-surface font-body-md py-3 resize-none custom-scrollbar max-h-32 placeholder:text-outline"
               placeholder="Ask anything about Project Alpha..."
               rows={1}
               style={{ overflowY: "hidden" }}

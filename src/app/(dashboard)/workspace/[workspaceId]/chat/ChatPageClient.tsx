@@ -106,6 +106,12 @@ export function ChatPageClient({
     }
   }, [workspaceId])
 
+  const handleTitleUpdate = useCallback((sessionId: string, title: string) => {
+    setSessions((prev) =>
+      prev.map((s) => (s.id === sessionId ? { ...s, title } : s))
+    )
+  }, [])
+
   // Collect all citations from current messages
   const allCitations = messages.flatMap((m) => m.citations || []).filter(Boolean)
 
@@ -143,6 +149,7 @@ export function ChatPageClient({
             initialMessages={messages}
             citations={allCitations}
             onToggleSources={() => setShowSources(!showSources)}
+            onTitleUpdate={(title) => handleTitleUpdate(activeSessionId, title)}
           />
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center p-8">

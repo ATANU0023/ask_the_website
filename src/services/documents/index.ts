@@ -119,6 +119,14 @@ export async function getTotalDocumentsForUser(userId: string) {
   return Number(count);
 }
 
+export async function getTotalStorageForUser(userId: string) {
+  const [{ total }] = await db
+    .select({ total: sql<number>`COALESCE(SUM(${documents.fileSize}), 0)` })
+    .from(documents)
+    .where(eq(documents.userId, userId));
+  return Number(total);
+}
+
 export async function verifyWorkspaceAccess(workspaceId: string, userId: string) {
   const [workspace] = await db
     .select()

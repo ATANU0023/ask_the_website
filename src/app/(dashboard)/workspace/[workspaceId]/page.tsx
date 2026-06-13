@@ -7,9 +7,9 @@ import { TabNavigation } from "@/components/shared/TabNavigation";
 import { DocumentList } from "@/components/documents/DocumentList";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     workspaceId: string;
-  };
+  }>;
 }
 
 export default async function WorkspacePage({ params }: PageProps) {
@@ -19,13 +19,15 @@ export default async function WorkspacePage({ params }: PageProps) {
     redirect("/login");
   }
 
-  const workspace = await getWorkspace(params.workspaceId);
+  const { workspaceId } = await params;
+
+  const workspace = await getWorkspace(workspaceId);
 
   if (!workspace) {
     notFound();
   }
 
-  const docs = await getDocumentsForWorkspace(params.workspaceId);
+  const docs = await getDocumentsForWorkspace(workspaceId);
   const documents = docs.map((d) => ({
     ...d,
     status: d.status ?? "processing",
@@ -37,7 +39,7 @@ export default async function WorkspacePage({ params }: PageProps) {
 
 
       {/* Documents View */}
-      <DocumentList documents={documents} workspaceId={params.workspaceId} />
+      <DocumentList documents={documents} workspaceId={workspaceId} />
     </div>
   );
 }

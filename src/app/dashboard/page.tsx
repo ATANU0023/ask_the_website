@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { getTotalDocumentsForUser } from "@/services/documents";
-import { getTotalWorkspacesForUser } from "@/services/workspaces";
-import { getWorkspacesForUser } from "@/services/workspaces";
+import { getTotalDocumentsForUser, getTotalStorageForUser } from "@/services/documents";
+import { getTotalWorkspacesForUser, getWorkspacesForUser } from "@/services/workspaces";
+import { getTotalChatSessionsForUser } from "@/services/chat";
 import Link from "next/link";
 
 export default async function DashboardPage() {
@@ -12,11 +12,20 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const [totalDocuments, totalWorkspaces, workspaces] = await Promise.all([
+  const [totalDocuments, totalWorkspaces, totalChatSessions, totalStorageBytes, workspaces] = await Promise.all([
     getTotalDocumentsForUser(session.user.id),
     getTotalWorkspacesForUser(session.user.id),
+    getTotalChatSessionsForUser(session.user.id),
+    getTotalStorageForUser(session.user.id),
     getWorkspacesForUser(session.user.id),
   ]);
+
+  const totalStorageMB = totalStorageBytes > 0
+    ? (totalStorageBytes / (1024 * 1024)).toFixed(1)
+    : "0";
+  const totalStorageDisplay = totalStorageBytes > 1024 * 1024 * 1024
+    ? (totalStorageBytes / (1024 * 1024 * 1024)).toFixed(1) + " GB"
+    : totalStorageMB + " MB";
 
   const user = session.user;
 
@@ -99,7 +108,7 @@ export default async function DashboardPage() {
                   <span className="material-icon text-amber-400">chat</span>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-foreground">-</p>
+                  <p className="text-2xl font-bold text-foreground">{totalChatSessions}</p>
                   <p className="text-xs text-on-surface-variant">Chat Sessions</p>
                 </div>
               </div>
@@ -119,7 +128,7 @@ export default async function DashboardPage() {
                   <span className="material-icon text-green-400">cloud</span>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-foreground">0 MB</p>
+                  <p className="text-2xl font-bold text-foreground">{totalStorageDisplay}</p>
                   <p className="text-xs text-on-surface-variant">Storage Used</p>
                 </div>
               </div>

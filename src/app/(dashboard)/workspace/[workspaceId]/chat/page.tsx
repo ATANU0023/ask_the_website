@@ -6,12 +6,12 @@ import { ChatPageClient } from "./ChatPageClient";
 import { TabNavigation } from "@/components/shared/TabNavigation";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     workspaceId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     session?: string;
-  };
+  }>;
 }
 
 export default async function ChatPage({ params, searchParams }: PageProps) {
@@ -21,7 +21,12 @@ export default async function ChatPage({ params, searchParams }: PageProps) {
     redirect("/login");
   }
 
-  const workspace = await getWorkspace(params.workspaceId);
+  const [{ workspaceId }, { session: activeSessionId }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
+
+  const workspace = await getWorkspace(workspaceId);
 
   if (!workspace) {
     notFound();
@@ -33,9 +38,9 @@ export default async function ChatPage({ params, searchParams }: PageProps) {
 
       <div className="flex-1 min-h-0 bg-background/20 relative">
         <ChatPageClient
-          workspaceId={params.workspaceId}
+          workspaceId={workspaceId}
           userId={session.user.id}
-          activeSessionId={searchParams.session}
+          activeSessionId={activeSessionId}
         />
       </div>
     </div>

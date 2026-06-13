@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { chatSessions, chatMessages } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
+import { llm } from "@/services/llm";
 
 export async function createSession(
   workspaceId: string,
@@ -49,6 +50,37 @@ export async function getSessionMessages(sessionId: string) {
 
 export async function deleteSession(id: string) {
   await db.delete(chatSessions).where(eq(chatSessions.id, id));
+}
+
+export async function getTotalChatSessionsForUser(userId: string) {
+  const [{ count }] = await db
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(chatSessions)
+    .where(eq(chatSessions.userId, userId));
+  return Number(count);
+}
+
+export async function updateSessionTitle(sessionId: string, title: string) {
+  await db
+    .update(chatSessions)
+    .set({ title, updatedAt: new Date() })
+    .where(eq(chatSessions.id, sessionId));
+}
+
+export async function generateAndUpdateTitle(
+  sessionId: string,
+  firstUserMessage: string
+): Promise<string | null> {
+  try {
+    const title = await llm.generateChatTitle(firstUserMessage);
+    if (title) {
+      await updateSessionTitle(sessionId, title);
+      return title;
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 export async function addMessage(
