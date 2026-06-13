@@ -10,9 +10,9 @@ import { reports } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     workspaceId: string;
-  };
+  }>;
 }
 
 export default async function ReportsPage({ params }: PageProps) {
@@ -22,7 +22,9 @@ export default async function ReportsPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  const workspace = await getWorkspace(params.workspaceId);
+  const { workspaceId } = await params;
+
+  const workspace = await getWorkspace(workspaceId);
 
   if (!workspace) {
     notFound();
@@ -31,7 +33,7 @@ export default async function ReportsPage({ params }: PageProps) {
   const reportRecords = await db
     .select()
     .from(reports)
-    .where(eq(reports.workspaceId, params.workspaceId))
+    .where(eq(reports.workspaceId, workspaceId))
     .orderBy(reports.updatedAt);
 
   const mapped = reportRecords.map((r) => ({
@@ -52,11 +54,11 @@ export default async function ReportsPage({ params }: PageProps) {
           <h2 className="text-lg font-medium text-foreground">Reports</h2>
           <p className="text-sm text-on-surface-variant">AI-generated executive summaries and analysis</p>
         </div>
-        <GenerateReportDialog workspaceId={params.workspaceId} />
+        <GenerateReportDialog workspaceId={workspaceId} />
       </div>
 
       <div className="flex-1 min-h-0">
-        <ReportList reports={mapped} workspaceId={params.workspaceId} />
+        <ReportList reports={mapped} workspaceId={workspaceId} />
       </div>
     </div>
   );

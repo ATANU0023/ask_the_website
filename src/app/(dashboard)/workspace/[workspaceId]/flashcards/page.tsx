@@ -10,9 +10,9 @@ import { flashcards } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     workspaceId: string;
-  };
+  }>;
 }
 
 export default async function FlashcardsPage({ params }: PageProps) {
@@ -22,7 +22,9 @@ export default async function FlashcardsPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  const workspace = await getWorkspace(params.workspaceId);
+  const { workspaceId } = await params;
+
+  const workspace = await getWorkspace(workspaceId);
 
   if (!workspace) {
     notFound();
@@ -31,7 +33,7 @@ export default async function FlashcardsPage({ params }: PageProps) {
   const cards = await db
     .select()
     .from(flashcards)
-    .where(eq(flashcards.workspaceId, params.workspaceId))
+    .where(eq(flashcards.workspaceId, workspaceId))
     .orderBy(flashcards.createdAt);
 
   return (
@@ -43,11 +45,11 @@ export default async function FlashcardsPage({ params }: PageProps) {
           <h2 className="text-lg font-medium text-foreground">Flashcards</h2>
           <p className="text-sm text-on-surface-variant">Study and review key concepts</p>
         </div>
-        <GenerateFlashcardDialog workspaceId={params.workspaceId} />
+        <GenerateFlashcardDialog workspaceId={workspaceId} />
       </div>
 
       <div className="flex-1 min-h-0">
-        <FlashcardDeck flashcards={cards} workspaceId={params.workspaceId} />
+        <FlashcardDeck flashcards={cards} workspaceId={workspaceId} />
       </div>
     </div>
   );

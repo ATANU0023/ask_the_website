@@ -1,6 +1,7 @@
 import type { LLMProvider, ProviderType } from "./types";
 import { GeminiProvider } from "./providers/gemini";
 import { GroqProvider } from "./providers/groq";
+import { TITLE_GENERATION_PROMPT } from "./prompts";
 
 const PROVIDER_MAP: Record<ProviderType, () => LLMProvider> = {
   gemini: () => new GeminiProvider(),
@@ -39,6 +40,12 @@ class LLMService {
 
   async generateStream(prompt: string, systemPrompt?: string, provider?: ProviderType): Promise<ReadableStream<string>> {
     return this.getProvider(provider).generateStream(prompt, systemPrompt);
+  }
+
+  async generateChatTitle(firstMessage: string): Promise<string> {
+    const prompt = TITLE_GENERATION_PROMPT.replace("{message}", firstMessage.slice(0, 500));
+    const title = await this.generate(prompt, "You are a helpful assistant that generates concise chat titles.");
+    return title.replace(/["']/g, "").trim().slice(0, 100);
   }
 }
 

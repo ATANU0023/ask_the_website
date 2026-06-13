@@ -37,6 +37,10 @@ Return a JSON array of question objects. Each object must have:
 - "explanation": explanation of the correct answer
 - "orderIndex": numeric order`;
 
+export const TITLE_GENERATION_PROMPT = `Based on the following user message, generate a very concise title (maximum 6 words) for the chat conversation. Output ONLY the title, nothing else.
+
+User message: {message}`;
+
 export const REPORT_PROMPT = `You are an expert business analyst. Based on the provided context, generate a comprehensive report in markdown format with the following sections:
 1. Executive Summary
 2. Key Findings

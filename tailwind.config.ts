@@ -53,6 +53,8 @@ const config = {
         "input": "#424351",
         "ring": "#c0c1ff",
         "foreground": "#e3e1ec",
+        "popover": "#12131a",
+        "popover-foreground": "#e3e1ec",
         "muted": "#1e1f26",
         "muted-foreground": "#92929e",
         "destructive": "#ffb4ab",
