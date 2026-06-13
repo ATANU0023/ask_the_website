@@ -29,34 +29,38 @@ interface SearchResult {
 }
 
 class QdrantVectorStore {
-  private client: QdrantClient;
+  private client: QdrantClient | null = null;
   private defaultCollections: Set<string> = new Set(["workspace_documents"]);
 
-  constructor() {
-    const url = process.env.QDRANT_URL;
-    const apiKey = process.env.QDRANT_API_KEY;
+  private getClient(): QdrantClient {
+    if (!this.client) {
+      const url = process.env.QDRANT_URL;
+      const apiKey = process.env.QDRANT_API_KEY;
 
-    if (!url) throw new Error("QDRANT_URL environment variable is required");
+      if (!url) throw new Error("QDRANT_URL environment variable is required");
 
-    this.client = new QdrantClient({
-      url,
-      apiKey,
-    });
+      this.client = new QdrantClient({
+        url,
+        apiKey,
+      });
+    }
+    return this.client;
   }
 
   private async ensureCollection(collection: string): Promise<void> {
-    const collections = await this.client.getCollections();
+    const client = this.getClient();
+    const collections = await client.getCollections();
     const exists = collections.collections.some((c) => c.name === collection);
 
     if (!exists) {
-      await this.client.createCollection(collection, {
+      await client.createCollection(collection, {
         vectors: { size: 1024, distance: "Cosine" },
       });
     }
 
     for (const field of ["documentId", "workspaceId", "userId", "sourceType"]) {
       try {
-        await this.client.createPayloadIndex(collection, {
+        await client.createPayloadIndex(collection, {
           field_name: field,
           field_schema: "keyword",
           wait: false,
@@ -69,7 +73,7 @@ class QdrantVectorStore {
 
   async upsertChunk(collection: string, point: VectorPoint): Promise<void> {
     await this.ensureCollection(collection);
-    await this.client.upsert(collection, {
+    await this.getClient().upsert(collection, {
       wait: true,
       points: [
         {
@@ -84,7 +88,7 @@ class QdrantVectorStore {
   async upsertChunks(collection: string, points: VectorPoint[]): Promise<void> {
     if (points.length === 0) return;
     await this.ensureCollection(collection);
-    await this.client.upsert(collection, {
+    await this.getClient().upsert(collection, {
       wait: true,
       points: points.map((p) => ({
         id: p.id,
@@ -122,7 +126,7 @@ class QdrantVectorStore {
       });
     }
 
-    const result = await this.client.search(collection, {
+    const result = await this.getClient().search(collection, {
       vector: queryVector,
       limit,
       filter: must.length > 0 ? { must } : undefined,
@@ -138,7 +142,7 @@ class QdrantVectorStore {
 
   async deleteByDocumentId(collection: string, documentId: string): Promise<void> {
     await this.ensureCollection(collection);
-    await this.client.delete(collection, {
+    await this.getClient().delete(collection, {
       wait: true,
       filter: {
         must: [{ key: "documentId", match: { value: documentId } }],
@@ -148,7 +152,7 @@ class QdrantVectorStore {
 
   async deleteByWorkspaceId(collection: string, workspaceId: string): Promise<void> {
     await this.ensureCollection(collection);
-    await this.client.delete(collection, {
+    await this.getClient().delete(collection, {
       wait: true,
       filter: {
         must: [{ key: "workspaceId", match: { value: workspaceId } }],
