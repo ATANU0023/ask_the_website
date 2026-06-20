@@ -2,6 +2,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/auth/LoginForm";
 import Link from "next/link";
+import Image from "next/image";
+import kiwiLogo from "../../../../public/kiwi.png";
 
 export default async function LoginPage() {
   const session = await auth();
@@ -18,10 +20,10 @@ export default async function LoginPage() {
         <div className="absolute top-1/4 -left-16 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 -right-16 w-96 h-96 bg-primary-fixed-dim/10 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col items-center text-center px-12 max-w-lg">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-primary-fixed-dim flex items-center justify-center shadow-2xl mb-8">
-            <span className="material-icon text-[40px] text-white">auto_awesome</span>
+          <div className="w-20 h-20 flex items-center justify-center shadow-2xl mb-8 rounded-2xl bg-white overflow-hidden p-2">
+            <Image src={kiwiLogo} alt="Kiwi Logo" width={64} height={64} className="object-contain" />
           </div>
-          <h2 className="text-3xl font-bold text-foreground mb-4">CognitiveSync AI</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-4">Kiwi</h2>
           <p className="text-lg text-on-surface-variant leading-relaxed">
             Your intelligent workspace for documents, research, and knowledge management powered by AI.
           </p>
@@ -52,10 +54,10 @@ export default async function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-fixed-dim flex items-center justify-center">
-              <span className="material-icon text-[22px] text-white">auto_awesome</span>
+            <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-white overflow-hidden p-1">
+              <Image src={kiwiLogo} alt="Kiwi Logo" width={32} height={32} className="object-contain" />
             </div>
-            <span className="text-lg font-bold text-foreground">CognitiveSync AI</span>
+            <span className="text-lg font-bold text-foreground">Kiwi</span>
           </div>
           <LoginForm />
           <p className="text-sm text-muted-foreground text-center mt-6">

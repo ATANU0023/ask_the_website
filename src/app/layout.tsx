@@ -12,10 +12,10 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 // Wait, the safest is to just load it via Google Fonts in the layout head since the mock does exactly that.
 
 export const metadata: Metadata = {
-  title: "CognitiveSync",
+  title: "Kiwi",
   description: "Your intelligent workspace for knowledge management",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/kiwi.png",
   },
 };
 

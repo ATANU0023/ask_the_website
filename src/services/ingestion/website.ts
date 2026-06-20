@@ -11,7 +11,7 @@ export async function fetchPage(url: string): Promise<string> {
   const response = await fetch(url, {
     headers: {
       "User-Agent":
-        "Mozilla/5.0 (compatible; KnowledgeWorkspaceBot/1.0; +https://askthewebsite.app)",
+        "Mozilla/5.0 (compatible; KiwiBot/1.0; +https://kiwi.app)",
     },
   });
 
