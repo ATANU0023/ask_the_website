@@ -142,6 +142,40 @@
   background: rgba(70, 69, 84, 0.8);
 }
 
+/* Bouncing dots with blink */
+@keyframes bounceBlink {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-25%);
+    opacity: 0.3;
+  }
+}
+
+.dot-blink {
+  animation: bounceBlink 1s ease-in-out infinite;
+}
+.dot-blink:nth-child(2) { animation-delay: 0.1s; }
+.dot-blink:nth-child(3) { animation-delay: 0.2s; }
+
+/* Shimmer loading text animation */
+@keyframes shimmerText {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, rgba(128, 128, 128, 0.3) 0%, rgb(var(--primary)) 50%, rgba(128, 128, 128, 0.3) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shimmerText 2.5s ease-in-out infinite;
+}
+
 /* Material Symbols icon helper */
 .material-icon, .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';

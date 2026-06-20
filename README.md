@@ -22,7 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ### The link -
 ```
-  https://ask-the-website.vercel.app/
+  https://kiwi.vercel.app/
 ```
 
 # Instruction:

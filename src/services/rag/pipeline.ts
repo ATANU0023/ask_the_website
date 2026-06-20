@@ -6,8 +6,7 @@ import {
   buildContextWithCitations,
   type Citation,
 } from "@/services/citations";
-import { RAG_SYSTEM_PROMPT } from "@/services/llm/prompts";
-import { QUERY_REWRITER_PROMPT } from "@/services/llm/prompts";
+import { RAG_SYSTEM_PROMPT, SOCIAL_SYSTEM_PROMPT, QUERY_REWRITER_PROMPT } from "@/services/llm/prompts";
 import { db } from "@/lib/db";
 import { documents } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
@@ -88,12 +87,34 @@ export async function runRAG(
   return { answer, citations };
 }
 
+const SOCIAL_PATTERNS = [
+  /^(hi|hello|hey|heya|howdy|greetings|yo)([\s!.,?]|$)/i,
+  /^(good\s*(morning|afternoon|evening|day))([\s!.,?]|$)/i,
+  /^(what'?s?\s*up|sup|wassup)([\s!.,?]|$)/i,
+  /^(thanks|thank\s*you|thx|tyvm|appreciate\s*it)([\s!.,?]|$)/i,
+  /^(bye|goodbye|see\s*ya?|talk\s*(to\s*you\s*)?later|g'?night|gn)([\s!.,?]|$)/i,
+  /^(how\s*are?\s*you|how'?re?\s*you|how's?\s*it\s*going|how\s*are?\s*things)([?\s!.,]|$)/i,
+  /^(who\s*are\s*you|what\s*are\s*you|what\s*can\s*you\s*do|tell\s*me\s*about\s*yourself)([?\s!.,]|$)/i,
+  /^(nice\s*to\s*meet\s*you|pleased?\s*to\s*meet\s*you)([\s!.,?]|$)/i,
+]
+
+function isSocialMessage(message: string): boolean {
+  const trimmed = message.trim()
+  if (!trimmed || trimmed.length > 100) return false
+  return SOCIAL_PATTERNS.some((pattern) => pattern.test(trimmed))
+}
+
 export async function runRAGStream(
   workspaceId: string,
   question: string,
   chatHistory?: { role: "user" | "assistant"; content: string }[],
   provider?: "gemini" | "groq"
 ): Promise<{ stream: ReadableStream<string>; citations: Citation[] }> {
+  if (isSocialMessage(question)) {
+    const stream = await llm.generateStream(question, SOCIAL_SYSTEM_PROMPT, provider)
+    return { stream, citations: [] }
+  }
+
   const rewrittenQuery = await rewriteQuery(question, chatHistory, provider);
 
   const queryEmbedding = await embeddingsProvider.generate(rewrittenQuery);

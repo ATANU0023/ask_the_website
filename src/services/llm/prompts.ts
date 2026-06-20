@@ -41,6 +41,8 @@ export const TITLE_GENERATION_PROMPT = `Based on the following user message, gen
 
 User message: {message}`;
 
+export const SOCIAL_SYSTEM_PROMPT = `You are a friendly and helpful AI assistant. Respond naturally to the user's greeting or casual message. Keep your response warm, concise, and conversational. Do not mention citations or documents.`;
+
 export const REPORT_PROMPT = `You are an expert business analyst. Based on the provided context, generate a comprehensive report in markdown format with the following sections:
 1. Executive Summary
 2. Key Findings

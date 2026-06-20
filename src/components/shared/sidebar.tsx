@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
+import kiwiLogo from "../../../public/kiwi.png"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -44,9 +46,12 @@ export function Sidebar({ workspaces, user: propUser }: SidebarProps) {
   return (
     <aside className="w-[280px] h-screen shrink-0 bg-surface-container-lowest border-r border-outline-muted flex flex-col py-gutter z-50">
       {/* Brand */}
-      <div className="px-6 mb-8 shrink-0">
-        <h1 className="font-headline-lg text-headline-lg font-bold text-primary">CognitiveSync</h1>
-        <p className="font-label-md text-label-md text-on-surface-variant opacity-70">Technical Zen Workspace</p>
+      <div className="px-6 mb-8 shrink-0 flex flex-col items-start gap-1">
+        <div className="flex items-center gap-2">
+          <Image src={kiwiLogo} alt="Kiwi Logo" width={32} height={32} className="object-contain" />
+          <h1 className="font-headline-lg text-headline-lg font-bold text-primary">Kiwi</h1>
+        </div>
+        <p className="font-label-md text-label-md text-on-surface-variant opacity-70 mt-1">Technical Zen Workspace</p>
       </div>
 
       <div className="px-6 shrink-0 mb-8">

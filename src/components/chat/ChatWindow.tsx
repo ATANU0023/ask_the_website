@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { CitationBadge } from "@/components/chat/citation-badge"
+import { LoadingShimmer } from "@/components/chat/loading-shimmer"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { cn } from "@/lib/utils"
@@ -209,11 +210,7 @@ export function ChatWindow({
                 msg.role === "user" ? "flex-row-reverse ml-auto" : ""
               )}
             >
-              {msg.role === "assistant" ? (
-                <div className="w-10 h-10 rounded-lg bg-primary-container flex-shrink-0 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_rgba(192,193,255,0.3)] mt-1">
-                  <span className="material-icon text-on-primary-container" style={{ fontVariationSettings: '"FILL" 1' }}>auto_awesome</span>
-                </div>
-              ) : (
+              {msg.role === "assistant" ? null : (
                 <div className="w-10 h-10 rounded-lg bg-surface-container-high flex-shrink-0 flex items-center justify-center border border-outline-muted mt-1">
                   <span className="material-icon text-on-surface-variant">person</span>
                 </div>
@@ -230,13 +227,7 @@ export function ChatWindow({
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {(msg.content || "").replace(/\[citation:[\d,\s]+\]/g, "")}
                     </ReactMarkdown>
-                    {loading && msg.content === "" && (
-                      <div className="flex gap-1.5 mt-2">
-                        <span className="w-2 h-2 rounded-full bg-primary/60 animate-bounce" />
-                        <span className="w-2 h-2 rounded-full bg-primary/60 animate-bounce [animation-delay:0.1s]" />
-                        <span className="w-2 h-2 rounded-full bg-primary/60 animate-bounce [animation-delay:0.2s]" />
-                      </div>
-                    )}
+                    {loading && msg.content === "" && <LoadingShimmer />}
                   </div>
                 ) : (
                   <p className="font-body-md text-body-md text-on-surface whitespace-pre-wrap">{msg.content}</p>
@@ -303,7 +294,7 @@ export function ChatWindow({
             )}
           </div>
         </div>
-        <p className="text-center mt-3 text-[11px] text-on-surface-variant/50 pointer-events-auto">CognitiveSync AI can make mistakes. Verify important information with citations.</p>
+        <p className="text-center mt-3 text-[11px] text-on-surface-variant/50 pointer-events-auto">Kiwi can make mistakes. Verify important information with citations.</p>
       </div>
     </div>
   )
